@@ -22,9 +22,9 @@ public class Main {
 
         manager.addEpic(epic2);
 
-        Subtask subtask1 = new Subtask(1, "Подзадача №1", "Применить на практике советы Р. Мартина", epic1.getId());
-        Subtask subtask2 = new Subtask(2, "Подзадача №2", "Сделать тестовое задание", epic1.getId());
-        Subtask subtask3 = new Subtask(3, "Подзадача №3", "Восстановить режим", epic2.getId());
+        Subtask subtask1 = new Subtask(manager.generateId(), "Подзадача №1", "Применить на практике советы Р. Мартина", epic1.getId());
+        Subtask subtask2 = new Subtask(manager.generateId(), "Подзадача №2", "Сделать тестовое задание", epic1.getId());
+        Subtask subtask3 = new Subtask(manager.generateId(), "Подзадача №3", "Восстановить режим", epic2.getId());
 
         // Добавление подзадач к соответствующим эпикам
         manager.addSubtask(epic1.getId(), subtask1);
@@ -45,17 +45,18 @@ public class Main {
         manager.updateTask(task1);
         manager.updateTask(task2);
         manager.updateSubtask(new Subtask(1, "Подзадача NEW", "Посмотреть вебинар", epic1.getId()));
-        manager.updateEpic(epic1);
+        manager.updateEpic(epic1); // Обновляем информацию об epic1 (его заголовок и описание) и обновляем его статус на основе статусов его подзадач
 
         System.out.println("Статусы после изменений:");
+
         for (Task task : manager.getAllTasks()) {
             System.out.println(task);
         }
 
         // Удаление задач, эпиков и подзадач
         manager.deleteTask(1);
-        manager.deleteEpic(2);
-        manager.deleteSubtask(2);
+        manager.deleteEpic(epic2.getId());
+        manager.deleteSubtask(subtask2.getId());
 
         System.out.println("Статусы после удаления:");
         for (Task task : manager.getAllTasks()) {
@@ -63,3 +64,4 @@ public class Main {
         }
     }
 }
+
