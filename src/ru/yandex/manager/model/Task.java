@@ -3,10 +3,10 @@ package ru.yandex.manager.model;
 import java.util.Objects;
 
 public class Task {
-    private int id;
-    private String title;
-    private String description;
-    private Status status;
+    public int id;
+    public String title;
+    public String description;
+    public Status status;
 
     public Task(int id, String title, String description) {
         this.id = id;
@@ -71,6 +71,7 @@ public class Task {
                 "id = " + id +
                 ", title = '" + title + '\'' +
                 ", description = '" + description + '\'' +
+                ", status = " + status +
                 '}';
     }
 }

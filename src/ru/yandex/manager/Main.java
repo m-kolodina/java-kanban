@@ -1,6 +1,7 @@
 package ru.yandex.manager;
 
 import ru.yandex.manager.model.Epic;
+import ru.yandex.manager.model.Status;
 import ru.yandex.manager.model.Subtask;
 import ru.yandex.manager.model.Task;
 import ru.yandex.manager.service.TaskManager;
@@ -19,12 +20,11 @@ public class Main {
         manager.addEpic(epic1);
 
         Epic epic2 = new Epic(2, "Эпик №2", "Поработать над концентрацией");
-
         manager.addEpic(epic2);
 
-        Subtask subtask1 = new Subtask(manager.generateId(), "Подзадача №1", "Применить на практике советы Р. Мартина", epic1.getId());
-        Subtask subtask2 = new Subtask(manager.generateId(), "Подзадача №2", "Сделать тестовое задание", epic1.getId());
-        Subtask subtask3 = new Subtask(manager.generateId(), "Подзадача №3", "Восстановить режим", epic2.getId());
+        Subtask subtask1 = new Subtask(1, "Подзадача №1", "Применить на практике советы Р. Мартина", epic1.getId());
+        Subtask subtask2 = new Subtask(2, "Подзадача №2", "Сделать тестовое задание", epic1.getId());
+        Subtask subtask3 = new Subtask(3, "Подзадача №3", "Восстановить режим", epic2.getId());
 
         // Добавление подзадач к соответствующим эпикам
         manager.addSubtask(epic1.getId(), subtask1);
@@ -32,7 +32,6 @@ public class Main {
         manager.addSubtask(epic2.getId(), subtask3);
 
         System.out.println("Список задач и эпиков:");
-
         for (Task task : manager.getAllTasks()) {
             System.out.println(task);
         }
@@ -42,19 +41,28 @@ public class Main {
         }
 
         // Обновление задач, подзадач и эпиков
+        task1.setTitle("Задача 1 обновлена");
+        task1.setDescription("Покормить уток");
+        task1.setStatus(Status.IN_PROGRESS);
+
+        subtask1.setTitle("Подзадача 1 обновлена");
+        subtask1.setDescription("Выспаться");
+
+        epic1.setTitle("Эпик 1 обновлен");
+        epic1.setDescription("Стать частицей фрактального всеединства существа");
+
         manager.updateTask(task1);
-        manager.updateTask(task2);
-        manager.updateSubtask(new Subtask(1, "Подзадача NEW", "Посмотреть вебинар", epic1.getId()));
-        manager.updateEpic(epic1); // Обновляем информацию об epic1 (его заголовок и описание) и обновляем его статус на основе статусов его подзадач
+        manager.updateSubtask(subtask1);
+        manager.updateEpic(epic1);
 
         System.out.println("Статусы после изменений:");
-
         for (Task task : manager.getAllTasks()) {
             System.out.println(task);
         }
 
         // Удаление задач, эпиков и подзадач
         manager.deleteTask(1);
+        manager.deleteTask(2);
         manager.deleteEpic(epic2.getId());
         manager.deleteSubtask(subtask2.getId());
 
@@ -64,4 +72,3 @@ public class Main {
         }
     }
 }
-
