@@ -1,27 +1,32 @@
 package ru.yandex.manager.model;
 
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class Epic extends Task {
-    private ArrayList<Subtask> subtasks;
 
-    public Epic(int id, String title, String description) {
-        super(id, title, description);
-        this.subtasks = new ArrayList<>();
+    private List<SubTask> subtasks = new ArrayList<>();
+
+    public Epic(String name, String description, TaskProgressStatus taskProgressStatus) {
+        super(name, description, taskProgressStatus);
     }
 
-    public void setSubtasks(ArrayList<Subtask> subtasks) {
+    public List<SubTask> getSubtasks() {
+        return subtasks;
+    }
+
+    public void addSubTask(SubTask subTask) {
+        subtasks.add(subTask);
+    }
+
+    public void setSubtasks(List<SubTask> subtasks) {
         this.subtasks = subtasks;
     }
 
-    // Переопределение для представления информации об эпике в виде строки
     @Override
     public String toString() {
-        return "Epic {" +
-                "id = " + getId() +
-                ", title = '" + getTitle() + '\'' +
-                ", description = '" + getDescription() + '\'' +
-                ", subtasks = " + subtasks +
-                '}';
+        return "model.Epic: " + getName() + " Description: " + getDescription()
+                + " Status: " + getTaskProgressStatus();
     }
 }

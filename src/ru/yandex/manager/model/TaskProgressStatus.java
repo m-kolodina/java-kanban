@@ -1,6 +1,7 @@
 package ru.yandex.manager.model;
 
-public enum Status {
+public enum TaskProgressStatus {
+
     NEW,
     IN_PROGRESS,
     DONE
