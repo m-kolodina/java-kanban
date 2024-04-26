@@ -1,15 +1,24 @@
 package ru.yandex.manager.model;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Epic extends Task {
 
+    private String description;
     private List<SubTask> subtasks = new ArrayList<>();
 
     public Epic(String name, String description, TaskProgressStatus taskProgressStatus) {
         super(name, description, taskProgressStatus);
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public List<SubTask> getSubtasks() {
@@ -30,3 +39,4 @@ public class Epic extends Task {
                 + " Status: " + getTaskProgressStatus();
     }
 }
+

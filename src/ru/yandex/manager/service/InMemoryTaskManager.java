@@ -27,10 +27,15 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addNewSubtask(SubTask subTask) {
-        subTask.setId(id++);
-        subTasks.put(subTask.getId(), subTask);
-        subTask.getEpic().addSubTask(subTask);
-        setEpicProgressStatus(subTask.getEpic());
+        subTask.setId(id);
+
+        if (epics.containsValue(subTask.getEpic())) {
+            subTasks.put(subTask.getId(), subTask);
+            subTask.getEpic().addSubTask(subTask);
+            setEpicProgressStatus(subTask.getEpic());
+        } else {
+            System.out.println("Ошибка: Эпик не найден. Подзадача не может быть добавлена.");
+        }
     }
 
     @Override
@@ -68,6 +73,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteAllEpics() {
         epics.clear();
+        subTasks.clear();
     }
 
     @Override
@@ -95,30 +101,63 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateSubtask(SubTask subTask, int id) {
-        subTasks.put(id, subTask);
-        Epic epic = subTask.getEpic();
-        epic.setSubtasks(subTasks.values().stream().filter(x -> x.getEpic().equals(epic)).toList());
-        setEpicProgressStatus(subTask.getEpic());
+        if (subTasks.containsKey(id) && subTasks.get(id).getEpic().getId() == subTask.getEpic().getId()) {
+            subTasks.put(id, subTask);
+            setEpicProgressStatus(subTask.getEpic());
+        }
     }
 
     @Override
     public void updateEpic(Epic epic, int id) {
-        epics.put(id, epic);
+        if (epics.containsKey(id)) {
+            Epic existingEpic = epics.get(id);
+            existingEpic.setDescription(epic.getDescription());
+        }
     }
 
     @Override
     public void updateTask(Task task, int id) {
-        tasks.put(id, task);
+        if (tasks.containsKey(id)) {
+            tasks.put(id, task);
+            task.markAsCompleted();
+        } else {
+            // Задачи с указанным id не существует, поэтому добавляем новую задачу
+            tasks.put(id, task);
+        }
     }
 
     @Override
     public void deleteEpicFromId(int id) {
-        epics.remove(id);
+        if (epics.containsKey(id)) {
+            Epic epicToDelete = epics.get(id);
+
+            // Удаление всех подзадач, связанных с этим эпиком
+            List<SubTask> subtasksToDelete = epicToDelete.getSubtasks();
+            for (SubTask subtask : subtasksToDelete) {
+                subTasks.remove(subtask.getId());
+            }
+
+            // Удаление эпика
+            epics.remove(id);
+        }
     }
+
 
     @Override
     public void deleteSubtaskFromId(int id) {
-        subTasks.remove(id);
+        SubTask deletedSubtask = subTasks.remove(id);
+
+        if (deletedSubtask != null) {
+            for (Epic epic : epics.values()) {
+                for (SubTask subTask : epic.getSubtasks()) {
+                    if (subTask.getId() == id) {
+                        epic.getSubtasks().remove(subTask);
+                        setEpicProgressStatus(epic); // Пересчитываем статус Эпика
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -133,8 +172,15 @@ public class InMemoryTaskManager implements TaskManager {
 
     private void setEpicProgressStatus(Epic epic) {
         List<SubTask> epicSubTasks = epic.getSubtasks();
-        boolean statusNew = epicSubTasks.stream().allMatch(x -> x.getTaskProgressStatus() == TaskProgressStatus.NEW);
+
+        if (epicSubTasks.isEmpty()) {
+            epic.setTaskProgressStatus(TaskProgressStatus.NEW);
+            return; // Завершаем метод, если нет подзадач
+        }
+
         boolean statusDone = epicSubTasks.stream().allMatch(x -> x.getTaskProgressStatus() == TaskProgressStatus.DONE);
+        boolean statusNew = epicSubTasks.stream().allMatch(x -> x.getTaskProgressStatus() == TaskProgressStatus.NEW);
+
         if (statusDone) {
             epic.setTaskProgressStatus(TaskProgressStatus.DONE);
         } else if (statusNew) {
@@ -143,6 +189,7 @@ public class InMemoryTaskManager implements TaskManager {
             epic.setTaskProgressStatus(TaskProgressStatus.IN_PROGRESS);
         }
     }
+
 
     @Override
     public List<Task> getHistory() {
