@@ -27,9 +27,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addNewSubtask(SubTask subTask) {
-        subTask.setId(id);
-
         if (epics.containsValue(subTask.getEpic())) {
+            subTask.setId(id++);
             subTasks.put(subTask.getId(), subTask);
             subTask.getEpic().addSubTask(subTask);
             setEpicProgressStatus(subTask.getEpic());
@@ -68,7 +67,13 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteAllSubtasks() {
         subTasks.clear();
+
+        for (Epic epic : epics.values()) {
+            epic.clearSubTasks();
+            setEpicProgressStatus(epic);
+        }
     }
+
 
     @Override
     public void deleteAllEpics() {
@@ -112,6 +117,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(id)) {
             Epic existingEpic = epics.get(id);
             existingEpic.setDescription(epic.getDescription());
+            existingEpic.setName(epic.getName());
         }
     }
 
@@ -119,7 +125,6 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateTask(Task task, int id) {
         if (tasks.containsKey(id)) {
             tasks.put(id, task);
-            task.markAsCompleted();
         } else {
             // Задачи с указанным id не существует, поэтому добавляем новую задачу
             tasks.put(id, task);

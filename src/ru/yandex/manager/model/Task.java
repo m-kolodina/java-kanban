@@ -8,13 +8,12 @@ public class Task {
     private final String description;
     private int id;
     private TaskProgressStatus taskProgressStatus;
-    private boolean isCompleted;
+
 
     public Task(String name, String description, TaskProgressStatus taskProgressStatus) {
         this.name = name;
         this.description = description;
         this.taskProgressStatus = taskProgressStatus;
-        this.isCompleted = false; // Изначально задача не выполнена
     }
 
     public String getName() {
@@ -41,14 +40,6 @@ public class Task {
         this.id = id;
     }
 
-    public boolean isCompleted() {
-        return isCompleted;
-    }
-
-    public void markAsCompleted() {
-        this.isCompleted = true;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -65,6 +56,7 @@ public class Task {
     @Override
     public String toString() {
         return "model.Task: " + getName() + " Description: " + getDescription()
-                + " Status: " + getTaskProgressStatus() + " Completed: " + isCompleted();
+                + " Status: " + getTaskProgressStatus();
     }
 }
+
