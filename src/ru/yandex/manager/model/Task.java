@@ -4,8 +4,8 @@ import java.util.Objects;
 
 public class Task {
 
-    private final String name;
-    private final String description;
+    private String name;
+    private String description;
     private int id;
     private TaskProgressStatus taskProgressStatus;
 
@@ -16,8 +16,16 @@ public class Task {
         this.taskProgressStatus = taskProgressStatus;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getDescription() {

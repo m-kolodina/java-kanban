@@ -4,16 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Epic extends Task {
-    private String name;
-
-    public void setName(String name) {
-        this.name = name;
-    }
-    private String description;
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     private List<SubTask> subtasks = new ArrayList<>();
 
