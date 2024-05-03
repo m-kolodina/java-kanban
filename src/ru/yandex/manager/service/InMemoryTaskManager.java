@@ -126,8 +126,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (tasks.containsKey(id)) {
             tasks.put(id, task);
         } else {
-            // Задачи с указанным id не существует, поэтому добавляем новую задачу
-            tasks.put(id, task);
+            System.out.println("Ошибка: задачи с id " + id + " не существует, поэтому новая задача не была добавлена.");
         }
     }
 
